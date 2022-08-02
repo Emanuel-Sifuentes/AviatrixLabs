@@ -1,0 +1,71 @@
+#mv kubeconfig ~/.kube/config
+#kubectl get node
+#kubectl create -f deployment.yaml
+#kubectl describe pod
+#kubectl describe pod | grep ip -i
+#kubectl get ingress
+#curl http://appgwpip/api/ip
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: sqlapi
+  labels:
+    app: sqlapi
+spec:
+  containers:
+  - image: "erjosito/sqlapi:0.1"
+    name: sqlapi
+    ports:
+    - containerPort: 8080
+      protocol: TCP
+    readinessProbe:
+      httpGet:
+        path: /api/healthcheck
+        port: 8080
+      periodSeconds: 3
+      timeoutSeconds: 1
+
+    env:
+    - name: SQL_SERVER_USERNAME
+      value: "avtxadmin"
+    - name: SQL_SERVER_PASSWORD
+      value: "P@ssw0rd12345!"
+    - name: SQL_SERVER_DB
+      value: "az-aks-sql-db"
+    - name: SQL_SERVER_FQDN
+      value: "az-sql-xxxxxx.database.windows.net"
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: sqlapi
+spec:
+  selector:
+    app: sqlapi
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sqlapi
+  annotations:
+    kubernetes.io/ingress.class: azure/application-gateway
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        backend:
+          service:
+            name: sqlapi
+            port:
+              number: 8080
+        pathType: Prefix
