@@ -36,6 +36,10 @@ resource "azurerm_route_table" "az-aks-snet-rt" {
       name = "default-rt"
       next_hop_type = "None"
     }
+
+  lifecycle {
+    ignore_changes = [route]
+  }
 }
 
 resource "azurerm_subnet" "az-aks-agic-snet" {
@@ -60,6 +64,10 @@ resource "azurerm_route_table" "az-aks-agic-snet-rt" {
       name = "default-rt"
       next_hop_type = "Internet"
     }
+
+  lifecycle {
+    ignore_changes = [route]
+  }
 }
 
 resource "azurerm_subnet_route_table_association" "az-aks-agic-rt-assc" {
@@ -166,7 +174,7 @@ resource "azurerm_network_interface" "az-jumpbox-vm-nic" {
 
   ip_configuration {
     name                          = "az-jumpbox-vm-nic-ipcfg"
-    subnet_id                     = aviatrix_vpc.az-vpcs["az-eu2-spoke1-vnet"].public_subnets[2].subnet_id
+    subnet_id                     = aviatrix_vpc.az-vpcs["az-spoke1-vnet"].public_subnets[2].subnet_id
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id = azurerm_public_ip.az-jumpbox-vm-pip.id
   }
@@ -258,7 +266,7 @@ resource "azurerm_network_interface" "az-spoke1-priv-vm-nic" {
 
   ip_configuration {
     name                          = "az-spoke1-priv-vm-nic-ipcfg"
-    subnet_id                     = aviatrix_vpc.az-vpcs["az-eu2-spoke1-vnet"].private_subnets[0].subnet_id
+    subnet_id                     = aviatrix_vpc.az-vpcs["az-spoke1-vnet"].private_subnets[0].subnet_id
     private_ip_address_allocation = "Dynamic"
   }
   depends_on = [

@@ -1,25 +1,25 @@
 variable "az-sub-id" {
     type = string
     description = "Azure subscription to be used for deployment"
-    default = "xxxxx-xxxxx-subId-xxxx-xxxxxxxxx"
+    default = "xxxx-xxxx-subId-xxxx-xxxx"
 }
 
 variable "az-app-id" {
     type = string
     description = "App ID of the Azure App used by Terraform"
-    default = "xxxxx-xxxxx-appId-xxxx-xxxxxxxxx"
+    default = "xxxx-xxxx-appId-xxxx-xxxx"
 }
 
 variable "az-app-secret" {
     type = string
     description = "Azure secret for the Azure App used by Terraform"
-    default = "xxxxx-xxxxx-appSecret-xxxx-xxxxxxxxx"
+    default = ";45%AzureAppSecret12345!x%/"
 }
 
 variable "az-tenant-id" {
     type = string
     description = "Azure tenant ID to identify AAD tenant"
-    default = "xxxxx-xxxxx-tenantId-xxxx-xxxxxxxxx"
+    default = "xxxx-xxxx-tenantId-xxxx-xxxx"
 }
 
 variable "az-region" {
@@ -49,7 +49,7 @@ variable "az-vm-user" {
 variable "az-vm-user-pwd" {
     type = string
     description = "Password for Azure VM user"
-    default = "P@ssw0rd12345!"
+    default = "P@ssword12345!"
 }
 
 variable "controller-public-ip" {
@@ -61,7 +61,7 @@ variable "controller-public-ip" {
 variable "controller-user" {
     type = string
     description = "Admin username for Aviatrix controller"
-    default = "avtxadmin"
+    default = "admin"
 }
 
 variable "controller-pwd" {
@@ -78,13 +78,13 @@ variable "az-vpc-list" {
             "vpc_name": "az-spoke1-vnet",
             "account_type": "8",
             "firenet_enabled": false,
-            "octet": "0"
+            "octet": "10"
         },
         {
             "vpc_name": "az-transit-firenet-vnet",
             "account_type": "8",
             "firenet_enabled": true,
-            "octet": "10"
+            "octet": "0"
         },
     ]
 }
@@ -92,7 +92,7 @@ variable "az-vpc-list" {
 variable "az-ssh-key-value" {
     type = string
     description = "Value of SSH public key"
-    default = "ssh-rsa A123public1ssh2key3value"
+    default = "ssh-rsa sshPublicKeyValue"
 }
 
 variable "az-gw-size" {
@@ -129,7 +129,7 @@ variable "aks-dns-prefix" {
 variable "aks-vnet-cidr" {
     type = string
     description = "CIDR range for the on-premise network (Minimum /26)"
-    default = "10.100.0.0/22"
+    default = "10.20.0.0/22"
 }
 
 variable "sql-name" {
@@ -148,4 +148,27 @@ variable "sql-pwd" {
     type = string
     description = "Admin password for the Azure SQL Server"
     default = "P@ssw0rd12345!"
+}
+
+variable "az-fw" {
+    type = map
+    description = "Variable values for Azure Firewall"
+    default = {
+        "snet-name" : "AzureFirewallSubnet"
+        "snet-cidr" : "10.0.3.0/26"
+        "mgmt-name" : "AzureFirewallManagementSubnet"
+        "mgmt-cidr" : "10.0.3.64/26"
+        "lan-name"  : "av-gw-az-transit-firenet-dmz-firewall-lan"
+        "lan-cidr"  : "10.0.3.128/26"
+        "name"      : "az-fw"
+        "pol_name"  : "az-fw-pol"
+        "law_name"  : "az-fw-law"
+        "rt_name"   : "az-fw-rt"
+    }
+}
+
+variable "az-fw-size" {
+    type = string
+    description = "Size of the firewall VM deployed in Azure"
+    default = "Standard_D3_v2"
 }

@@ -1,11 +1,3 @@
-#mv kubeconfig ~/.kube/config
-#kubectl get node
-#kubectl create -f deployment.yaml
-#kubectl describe pod
-#kubectl describe pod | grep ip -i
-#kubectl get ingress
-#curl http://appgwpip/api/ip
-
 apiVersion: v1
 kind: Pod
 metadata:

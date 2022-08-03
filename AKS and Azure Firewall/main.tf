@@ -41,8 +41,8 @@ provider "aviatrix" {
   username = var.controller-user
   verify_ssl_certificate = false
   skip_version_validation = true
+  
 }
-
 provider "http" {
 }
 

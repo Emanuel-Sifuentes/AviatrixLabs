@@ -12,7 +12,7 @@ resource "aviatrix_vpc" "az-vpcs" {
   aviatrix_firenet_vpc = each.value.firenet_enabled
   resource_group = azurerm_resource_group.az-rg.name
   region = var.az-region
-  cidr = "10.10.${each.value.octet}.0/23"
+  cidr = "10.${each.value.octet}.0.0/22"
 
   depends_on = [
     azurerm_resource_group.az-rg
@@ -22,12 +22,12 @@ resource "aviatrix_vpc" "az-vpcs" {
 resource "aviatrix_transit_gateway" "az-firenet-gw" {
     account_name = aviatrix_account.az_account.account_name
     cloud_type = aviatrix_account.az_account.cloud_type
-    gw_name = split("-vnet","${aviatrix_vpc.az-vpcs["az-eu2-transit-firenet-vnet"].name}")[0]
+    gw_name = split("-vnet","${aviatrix_vpc.az-vpcs["az-transit-firenet-vnet"].name}")[0]
     gw_size = var.az-gw-size
-    subnet = aviatrix_vpc.az-vpcs["az-eu2-transit-firenet-vnet"].public_subnets[2].cidr
-    //ha_subnet = aviatrix_vpc.az-vpcs["az-eu2-transit-firenet-vnet"].public_subnets[3].cidr
-    //ha_gw_size = var.az-gw-size
-    vpc_id = aviatrix_vpc.az-vpcs["az-eu2-transit-firenet-vnet"].vpc_id
+    subnet = aviatrix_vpc.az-vpcs["az-transit-firenet-vnet"].public_subnets[2].cidr
+    ha_subnet = aviatrix_vpc.az-vpcs["az-transit-firenet-vnet"].public_subnets[3].cidr
+    ha_gw_size = var.az-gw-size
+    vpc_id = aviatrix_vpc.az-vpcs["az-transit-firenet-vnet"].vpc_id
     vpc_reg = var.az-region
     connected_transit = true
     enable_transit_firenet = true
@@ -36,13 +36,13 @@ resource "aviatrix_transit_gateway" "az-firenet-gw" {
 resource "aviatrix_spoke_gateway" "az-spoke1-gw" {
   account_name = aviatrix_account.az_account.account_name
   cloud_type = aviatrix_account.az_account.cloud_type
-  gw_name = split("-vnet","${aviatrix_vpc.az-vpcs["az-eu2-spoke1-vnet"].name}")[0]
+  gw_name = split("-vnet","${aviatrix_vpc.az-vpcs["az-spoke1-vnet"].name}")[0]
   gw_size = var.az-gw-size
-  subnet = aviatrix_vpc.az-vpcs["az-eu2-spoke1-vnet"].public_subnets[0].cidr
-  vpc_id = aviatrix_vpc.az-vpcs["az-eu2-spoke1-vnet"].vpc_id
-  vpc_reg = aviatrix_vpc.az-vpcs["az-eu2-spoke1-vnet"].region
+  subnet = aviatrix_vpc.az-vpcs["az-spoke1-vnet"].public_subnets[0].cidr
+  vpc_id = aviatrix_vpc.az-vpcs["az-spoke1-vnet"].vpc_id
+  vpc_reg = aviatrix_vpc.az-vpcs["az-spoke1-vnet"].region
   single_az_ha = false
-  //ha_subnet = aviatrix_vpc.az-vpcs["az-eu2-spoke1-vnet"].public_subnets[1].cidr
+  //ha_subnet = aviatrix_vpc.az-vpcs["az-spoke1-vnet"].public_subnets[1].cidr
   //ha_gw_size = var.az-gw-size
   manage_transit_gateway_attachment = false
 
@@ -57,6 +57,8 @@ resource "aviatrix_spoke_gateway" "aks-spoke-gw" {
   gw_name = "${var.aks-name}-gw"
   gw_size = var.az-gw-size
   subnet = azurerm_subnet.az-avtx-gw-snets[0].address_prefixes[0]
+  //ha_subnet = azurerm_subnet.az-avtx-gw-snets[1].address_prefixes[0]
+  //ha_gw_size = var.az-gw-size
   vpc_id = "${azurerm_virtual_network.az-aks-vnet.name}:${azurerm_virtual_network.az-aks-vnet.resource_group_name}:${azurerm_virtual_network.az-aks-vnet.guid}"
   vpc_reg = var.az-region
   single_az_ha = false
@@ -119,14 +121,45 @@ resource "aviatrix_fqdn" "az-fqdn-egress-fqdn" {
 
 }
 
+resource "aviatrix_firewall_instance_association" "az-fw-firenet-assc" {
+    instance_id = "${azurerm_firewall.az-fw.name}:${azurerm_firewall.az-fw.resource_group_name}"
+    vendor_type = "Generic"
+    vpc_id = aviatrix_vpc.az-vpcs["az-transit-firenet-vnet"].vpc_id
+    firenet_gw_name = aviatrix_transit_gateway.az-firenet-gw.gw_name
+    firewall_name = var.az-fw.name
+    lan_interface = azurerm_network_interface.az-fw-dummy-lan-nic.id
+    management_interface = azurerm_network_interface.az-fw-dummy-mgmt-nic.id
+    egress_interface = azurerm_network_interface.az-fw-dummy-wan-nic.id
+    attached = true
+
+    depends_on = [
+      azurerm_virtual_machine.az-dummy-vm
+    ]
+}
+
 resource "aviatrix_firenet" "az-transit-firenet-cfg" {
-    vpc_id = aviatrix_vpc.az-vpcs["az-eu2-transit-firenet-vnet"].vpc_id
+    vpc_id = aviatrix_vpc.az-vpcs["az-transit-firenet-vnet"].vpc_id
     inspection_enabled = true
     egress_enabled = false
     manage_firewall_instance_association = false
 
-       depends_on = [
-        aviatrix_vpc.az-vpcs,
-        aviatrix_transit_gateway.az-firenet-gw
-    ] 
+    depends_on = [
+        aviatrix_firewall_instance_association.az-fw-firenet-assc
+    ]
 } 
+
+resource "aviatrix_transit_firenet_policy" "az-spokes-transit-fw-pol" {
+  inspected_resource_name = "SPOKE:${aviatrix_spoke_gateway.az-spoke1-gw.gw_name}"
+  transit_firenet_gateway_name = aviatrix_transit_gateway.az-firenet-gw.gw_name
+  depends_on = [
+    aviatrix_firewall_instance_association.az-fw-firenet-assc
+  ]
+}
+
+resource "aviatrix_transit_firenet_policy" "az-aks-transit-fw-pol" {
+  inspected_resource_name = "SPOKE:${aviatrix_spoke_gateway.aks-spoke-gw.gw_name}"
+  transit_firenet_gateway_name = aviatrix_transit_gateway.az-firenet-gw.gw_name
+  depends_on = [
+    aviatrix_firewall_instance_association.az-fw-firenet-assc
+  ]
+}
