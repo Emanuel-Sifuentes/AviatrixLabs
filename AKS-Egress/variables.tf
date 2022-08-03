@@ -1,30 +1,30 @@
 variable "az-sub-id" {
     type = string
-    description = "Azure subscription"
+    description = "Azure subscription to be used for deployment"
     default = "xxxxx-xxxxx-subId-xxxx-xxxxxxxxx"
 }
 
 variable "az-app-id" {
     type = string
-    description = "Azure app ID"
+    description = "App ID of the Azure App used by Terraform"
     default = "xxxxx-xxxxx-appId-xxxx-xxxxxxxxx"
 }
 
 variable "az-app-secret" {
     type = string
-    description = "Azure secret"
-    default = "sup3rs3cr3tp4ssw0rd" 
+    description = "Azure secret for the Azure App used by Terraform"
+    default = "xxxxx-xxxxx-appSecret-xxxx-xxxxxxxxx"
 }
 
 variable "az-tenant-id" {
     type = string
-    description = "Azure tenant ID"
-    default = "xxxxx-xxxxx-tenantId-xxxx-xxxxxxxxx" 
+    description = "Azure tenant ID to identify AAD tenant"
+    default = "xxxxx-xxxxx-tenantId-xxxx-xxxxxxxxx"
 }
 
 variable "az-region" {
     type = string
-    description = "Azure region for resources"
+    description = "Azure region for resources to be deployed in"
     default = "East US 2"
 }
 
