@@ -147,7 +147,7 @@ variable "sql-user" {
 variable "sql-pwd" {
     type = string
     description = "Admin password for the Azure SQL Server"
-    default = "P@ssw0rd12345!"
+    default = "P@ssword12345!"
 }
 
 variable "az-fw" {
