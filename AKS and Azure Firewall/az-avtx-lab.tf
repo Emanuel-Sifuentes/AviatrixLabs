@@ -148,11 +148,13 @@ resource "aviatrix_firenet" "az-transit-firenet-cfg" {
     ]
 } 
 
-resource "aviatrix_transit_firenet_policy" "az-spokes-transit-fw-pol" {
+resource "aviatrix_transit_firenet_policy" "az-spoke1-transit-fw-pol" {
   inspected_resource_name = "SPOKE:${aviatrix_spoke_gateway.az-spoke1-gw.gw_name}"
   transit_firenet_gateway_name = aviatrix_transit_gateway.az-firenet-gw.gw_name
   depends_on = [
-    aviatrix_firewall_instance_association.az-fw-firenet-assc
+    aviatrix_firewall_instance_association.az-fw-firenet-assc,
+    aviatrix_spoke_gateway.az-spoke1-gw,
+    aviatrix_spoke_transit_attachment.az-spoke1-transit-attach
   ]
 }
 
@@ -160,6 +162,8 @@ resource "aviatrix_transit_firenet_policy" "az-aks-transit-fw-pol" {
   inspected_resource_name = "SPOKE:${aviatrix_spoke_gateway.aks-spoke-gw.gw_name}"
   transit_firenet_gateway_name = aviatrix_transit_gateway.az-firenet-gw.gw_name
   depends_on = [
-    aviatrix_firewall_instance_association.az-fw-firenet-assc
+    aviatrix_firewall_instance_association.az-fw-firenet-assc,
+    aviatrix_spoke_gateway.aks-spoke-gw,
+    aviatrix_spoke_transit_attachment.az-aks-transit-attach
   ]
 }

@@ -1,5 +1,5 @@
 # Overview of AKS and Azure Firewall Lab with Aviatrix 
-This lab shows how to deploy an AKS cluster, using Azure CNI, and using an Aviatrix FQDN Egress gateway for localized egress. Additionally, we will be using Azure Firewall (FWaaS) and integrating it onto  Aviatrix Firenet. 
+This lab shows how to deploy an AKS cluster, using Azure CNI, and using an Aviatrix FQDN Egress gateway for localized egressn and using AGIC for ingress. Additionally, we will be using Azure Firewall (FWaaS) and integrating it onto  Aviatrix Firenet. 
 
 The following variables need to be defined within the variables.tf file
 
