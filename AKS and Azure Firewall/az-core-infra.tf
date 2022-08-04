@@ -242,15 +242,10 @@ resource "azurerm_virtual_machine" "az-jumpbox-vm" {
     computer_name  = "az-jumpbox-vm"
     admin_username = var.az-vm-user
     admin_password = var.az-vm-user-pwd
-    custom_data = "${file("user_init.sh")}"
   }
 
   os_profile_linux_config {
     disable_password_authentication = false
-    ssh_keys {
-      key_data = var.az-ssh-key-value
-      path = "/home/${var.az-vm-user}/.ssh/authorized_keys"
-    }
   }
 
   boot_diagnostics {
@@ -306,10 +301,6 @@ resource "azurerm_virtual_machine" "az-spoke1-priv-vm" {
 
   os_profile_linux_config {
     disable_password_authentication = false
-    ssh_keys {
-      key_data = var.az-ssh-key-value
-      path = "/home/${var.az-vm-user}/.ssh/authorized_keys"
-    }
   }
 
   boot_diagnostics {

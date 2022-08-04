@@ -89,12 +89,6 @@ variable "az-vpc-list" {
     ]
 }
 
-variable "az-ssh-key-value" {
-    type = string
-    description = "Value of SSH public key"
-    default = "ssh-rsa sshPublicKeyValue"
-}
-
 variable "az-gw-size" {
     type = string
     description = "Size for Azure gateways"
@@ -165,10 +159,4 @@ variable "az-fw" {
         "law_name"  : "az-fw-law"
         "rt_name"   : "az-fw-rt"
     }
-}
-
-variable "az-fw-size" {
-    type = string
-    description = "Size of the firewall VM deployed in Azure"
-    default = "Standard_D3_v2"
 }
