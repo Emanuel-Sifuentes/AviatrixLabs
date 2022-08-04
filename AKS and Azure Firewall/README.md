@@ -11,11 +11,8 @@ The following variables need to be defined within the variables.tf file
 - **az-app-secret** - Azure secret for the Azure App used by Terraform
 - **az-tenant-id** - Azure tenant ID to identify AAD tenant
 - **az-region** - Azure region for resources to be deployed in (defaults to East US 2)
-- **az-ssh-key-value** - The SSH public key value to be used to SSH onto VMs
 
-Additionally, you will need to add your SSH public key and private key to the **user_init.sh** file in order for those keys to also be added to the jumpbox. Alternatively, you can edit the TF files to opt-in to password-only access. 
-
-Finally, it is recommended that you change the pre-defined password variables to avoid any security concerns. 
+Additionally, it is recommended that you change the pre-defined password variables to avoid any security concerns. 
 
 # Post-deployment
 
