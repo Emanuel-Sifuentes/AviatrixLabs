@@ -10,6 +10,10 @@ output "az-fqdn-egress-gw-ip" {
   value = aviatrix_gateway.az-fqdn-egress-gw.eip
 }
 
+output "az-fw-ilb-ip" {
+  value = azurerm_firewall.az-fw.ip_configuration[0].private_ip_address
+}
+
 output "az-mssql-fqdn" {
   value = azurerm_mssql_server.az-aks-sql.fully_qualified_domain_name
 }
