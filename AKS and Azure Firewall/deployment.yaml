@@ -1,32 +1,42 @@
-apiVersion: v1
-kind: Pod
+apiVersion: apps/v1
+kind: ReplicaSet
 metadata:
-  name: sqlapi
+  name: sqplapi
   labels:
-    app: sqlapi
+    app: sqplapi
+    tier: frontend
 spec:
-  containers:
-  - image: "erjosito/sqlapi:0.1"
-    name: sqlapi
-    ports:
-    - containerPort: 8080
-      protocol: TCP
-    readinessProbe:
-      httpGet:
-        path: /api/healthcheck
-        port: 8080
-      periodSeconds: 3
-      timeoutSeconds: 1
+  replicas: 2
+  selector:
+    matchLabels:
+      app: sqlapi
+  template:
+    metadata:
+      labels:
+        app: sqlapi
+    spec:
+      containers:  
+        - name: sqplapi  
+          image: "erjosito/sqlapi:0.1"
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /api/healthcheck
+              port: 8080
+            periodSeconds: 3
+            timeoutSeconds: 1
 
-    env:
-    - name: SQL_SERVER_USERNAME
-      value: "avtxadmin"
-    - name: SQL_SERVER_PASSWORD
-      value: "P@ssw0rd12345!"
-    - name: SQL_SERVER_DB
-      value: "az-aks-sql-db"
-    - name: SQL_SERVER_FQDN
-      value: "az-sql-xxxxxx.database.windows.net"
+          env:
+          - name: SQL_SERVER_USERNAME
+            value: "avtxadmin"
+          - name: SQL_SERVER_PASSWORD
+            value: "P@ssw0rd12345!"
+          - name: SQL_SERVER_DB
+            value: "az-aks-sql-db"
+          - name: SQL_SERVER_FQDN
+            value: "az-sql-xxxxxx.database.windows.net"
 
 ---
 
@@ -41,6 +51,7 @@ spec:
   - protocol: TCP
     port: 8080
     targetPort: 8080
+
 
 ---
 
