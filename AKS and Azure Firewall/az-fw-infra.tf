@@ -272,7 +272,7 @@ data "azurerm_monitor_diagnostic_categories" "az-fw-log-cat" {
     
 }
 
-resource "azurerm_monitor_diagnostic_setting" "az-fw-diags" {
+/* resource "azurerm_monitor_diagnostic_setting" "az-fw-diags" {
     name = "az-fw-diag"
     target_resource_id = azurerm_firewall.az-fw.id
     log_analytics_workspace_id = azurerm_log_analytics_workspace.az-fw-law.id
@@ -294,4 +294,4 @@ resource "azurerm_monitor_diagnostic_setting" "az-fw-diags" {
       azurerm_firewall.az-fw,
       azurerm_log_analytics_workspace.az-fw-law
     ]
-}
+} */
