@@ -34,4 +34,4 @@ Once the deployment has finished, there a couple of things that must be done in 
 
 # Architecture
 
-![Reference Architecture](/AKS and Azure Firewall/AKS and Azure Firewall/AKS - AzFw Scenario.png)
+![Reference Architecture](https://raw.githubusercontent.com/Emanuel-Sifuentes/AviatrixLabs/main/AKS%20and%20Azure%20Firewall/AKS%20-%20AzFw%20Scenario.png)
