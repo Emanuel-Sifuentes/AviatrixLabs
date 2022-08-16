@@ -32,4 +32,6 @@ Once the deployment has finished, there a couple of things that must be done in 
     kubectl get ingress
     ```
 
-# Architecture (Coming Soon)
+# Architecture
+
+![Reference Architecture](/AKS and Azure Firewall/AKS and Azure Firewall/AKS - AzFw Scenario.png)
