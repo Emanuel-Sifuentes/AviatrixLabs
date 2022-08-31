@@ -1,5 +1,7 @@
 # Overview of Aviatrix Functional Testing Lab 
-This lab shows how to deploy an Aviatrix multi-hub-and-spoke topology in Azure to be used as a testbed for functional testing or as a sandbox environment.   
+This lab shows how to deploy an Aviatrix multi-hub-and-spoke topology in Azure to be used as a testbed for functional testing or as a sandbox environment. 
+
+This template requires that an Aviatrix Controller already be deployed. If you have not deployed an Aviatrix Controller yet, you may do so by following the steps in the [AviatrixSystems GitHub repo](https://github.com/AviatrixSystems/terraform-aviatrix-azure-controller). 
 
 The following variables need to be defined within the variables.tf file
 
