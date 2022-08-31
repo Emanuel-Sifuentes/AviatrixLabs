@@ -19,6 +19,9 @@ The following variables need to be defined within the variables.tf file
 
 Additionally, it is recommended that you change the pre-defined password variables to avoid any security concerns. 
 
+Note that this testbed uses the Terraform HTTP module to retrieve public IP of machine running *terraform apply* command in order to add the retrieved public IP to the NSG ACLs. 
+If you execute it remotely (non-local machijne), make sure that you add the IP you wish to use to SSH into the Jumpbox VM. 
+
 # Architecture
 
 ![Reference Architecture](https://raw.githubusercontent.com/Emanuel-Sifuentes/AviatrixLabs/main/Perf%20Test/Virtual%20Functional%20Testing.png)
