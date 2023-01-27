@@ -53,7 +53,7 @@ provider "random" {
 }
 
 resource "aviatrix_account" "az_account" {
-    account_name = "azure"
+    account_name = "azure-${random_string.az-avtxlabsa-random.id}"
     cloud_type = 8
     arm_application_id = var.az-app-id
     arm_subscription_id = var.az-sub-id
