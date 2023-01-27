@@ -20,4 +20,4 @@ Will add later....
 
 # Architecture
 
-![Reference Architecture](https://raw.githubusercontent.com/Emanuel-Sifuentes/AviatrixLabs/main/AKS%20and%20Azure%20Firewall/AKS%20-%20AzFw%20Scenario.png)
+![Reference Architecture](https://raw.githubusercontent.com/Emanuel-Sifuentes/AviatrixLabs/main/ARS%20-%20BGPoLAN/ARS%20-%20BGPoLAN%20Lab.png)
