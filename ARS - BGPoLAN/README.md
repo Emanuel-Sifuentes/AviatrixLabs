@@ -20,4 +20,4 @@ Will add later....
 
 # Architecture
 
-![Reference Architecture](https://raw.githubusercontent.com/Emanuel-Sifuentes/AviatrixLabs/main/ARS%20-%20BGPoLAN/ARS%20-%20BGPoLAN%20Lab.png)
+![Reference Architecture](https://raw.githubusercontent.com/Emanuel-Sifuentes/AviatrixLabs/main/ARS%20-%20BGPoLAN/ARS%20-%20BGPoLAN%20Architecture.png)
