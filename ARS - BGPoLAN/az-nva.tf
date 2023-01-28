@@ -139,29 +139,6 @@ SETTINGS
 
 }
 
-resource "azurerm_virtual_machine_extension" "az-ars-nva-iptables" {
-    count = 2
-    name                 = "nva${count.index+1}iptables"
-    virtual_machine_id   = azurerm_virtual_machine.az-ars-nva[count.index].id
-    publisher            = "Microsoft.Azure.Extensions"
-    type                 = "CustomScript"
-    type_handler_version = "2.0"
-    depends_on = [
-      azurerm_virtual_machine_extension.az-ars-nva-bootstrap
-    ]
-
-
-    settings = <<SETTINGS
-    {
-        "fileUris": [
-        "https://raw.githubusercontent.com/Emanuel-Sifuentes/AviatrixLabs/main/ARS%20-%20BGPoLAN/iptables.sh"
-        ],
-        "commandToExecute": "./iptables.sh"
-    }
-SETTINGS
-
-}
-
 resource "azurerm_lb" "az-ars-nva-ilb" {
     location = var.az-region
     name = "az-ars-nva"
