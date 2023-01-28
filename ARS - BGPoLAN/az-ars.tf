@@ -49,6 +49,10 @@ resource "azurerm_virtual_network_peering" "ars-to-avtx-transit-peering" {
   allow_forwarded_traffic = true
   allow_virtual_network_access = true
   allow_gateway_transit = true
+
+  depends_on = [
+    azurerm_route_server.az-ars
+  ]
 }
 
 resource "azurerm_route_server_bgp_connection" "ars-to-avtx-gw" {

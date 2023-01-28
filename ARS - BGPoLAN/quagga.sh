@@ -9,10 +9,9 @@ sed -i "/net.ipv6.conf.all.forwarding=1/ s/# *//" /etc/sysctl.conf
 asn_quagga=$1
 bgp_routerId=$2
 bgp_network1=$3
-bgp_network2=$4
-routeserver_IP1=$5
-routeserver_IP2=$6
-nexthopip=$7
+routeserver_IP1=$4
+routeserver_IP2=$5
+nexthopip=$6
 
 sudo apt-get -y update
 
@@ -95,18 +94,13 @@ EOF
 echo "add quagga config"
 cat <<EOF > /etc/quagga/bgpd.conf
 !
-log file /var/log/quagga/bgpd.log informational
-!
 router bgp $asn_quagga
  bgp router-id $bgp_routerId
  network $bgp_network1
- network $bgp_network2
  neighbor $routeserver_IP1 remote-as 65515
- neighbor $routeserver_IP1 ebgp-multihop 255
  neighbor $routeserver_IP1 soft-reconfiguration inbound
  neighbor $routeserver_IP1 route-map nexthop out
  neighbor $routeserver_IP2 remote-as 65515
- neighbor $routeserver_IP2 ebgp-multihop 255
  neighbor $routeserver_IP2 soft-reconfiguration inbound
  neighbor $routeserver_IP2 route-map nexthop out
 !
@@ -128,7 +122,5 @@ systemctl enable bgpd.service
 
 ## run the daemons
 echo "start zebra and quagga daemons"
-systemctl restart zebra
-systemctl restart bgpd 
-systemctl start zebra
-systemctl start bgpd 
+systemctl start zebra 
+systemctl start bgpd  

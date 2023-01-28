@@ -170,3 +170,9 @@ variable "az-ars-nva-ilb-ip" {
     description = "Static IP for the NVA ILB"
     default = "10.50.0.10"
 }
+
+variable "az-ars-nva-summarized-route" {
+    type = string
+    description = "Summarized route for the NVAs to advertise"
+    default = "10.50.0.0/16"
+}

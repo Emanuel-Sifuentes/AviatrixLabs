@@ -131,11 +131,35 @@ resource "azurerm_virtual_machine_extension" "az-ars-nva-bootstrap" {
     settings = <<SETTINGS
     {
         "fileUris": [
-        "https://raw.githubusercontent.com/dmauser/azure-routeserver/main/ars-nhip/script/linuxrouterbgpnh.sh"
+        "https://raw.githubusercontent.com/Emanuel-Sifuentes/AviatrixLabs/main/ARS%20-%20BGPoLAN/quagga.sh"
         ],
-        "commandToExecute": "./linuxrouterbgpnh.sh ${var.az-ars-nva-asn} ${azurerm_network_interface.az-ars-nva-nic[count.index].ip_configuration[0].private_ip_address} ${azurerm_virtual_network.az-ars-vnet.address_space[0]} ${azurerm_virtual_network.az-ars-spoke1-vnet.address_space[0]} ${local.ars-ip-1} ${local.ars-ip-2} ${var.az-ars-nva-ilb-ip}"
+        "commandToExecute": "./quagga.sh ${var.az-ars-nva-asn} ${azurerm_network_interface.az-ars-nva-nic[count.index].ip_configuration[0].private_ip_address} ${var.az-ars-nva-summarized-route} ${local.ars-ip-1} ${local.ars-ip-2} ${var.az-ars-nva-ilb-ip}"
     }
 SETTINGS
+
+}
+
+resource "azurerm_virtual_machine_extension" "az-ars-nva-iptables" {
+    count = 2
+    name                 = "nva${count.index+1}iptables"
+    virtual_machine_id   = azurerm_virtual_machine.az-ars-nva[count.index].id
+    publisher            = "Microsoft.Azure.Extensions"
+    type                 = "CustomScript"
+    type_handler_version = "2.0"
+
+
+    settings = <<SETTINGS
+    {
+        "fileUris": [
+        "https://raw.githubusercontent.com/Emanuel-Sifuentes/AviatrixLabs/main/ARS%20-%20BGPoLAN/iptables.sh"
+        ],
+        "commandToExecute": "./iptables.sh\"
+    }
+SETTINGS
+
+    depends_on = [
+      azurerm_virtual_machine_extension.az-ars-nva-bootstrap
+    ]
 
 }
 

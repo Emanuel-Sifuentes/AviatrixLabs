@@ -97,6 +97,7 @@ resource "azurerm_virtual_network_peering" "avtx-transit-to-ars-peering" {
   use_remote_gateways = true
 
   depends_on = [
+    azurerm_virtual_network_peering.ars-to-avtx-transit-peering,
     azurerm_route_server.az-ars
   ]
 }
