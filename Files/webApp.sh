@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # This command is supposed to be run as root, or by a Custom Script Extension if deployed on an Azure VM
 # Parameters
 
