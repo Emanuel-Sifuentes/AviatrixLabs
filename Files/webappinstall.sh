@@ -11,7 +11,6 @@ export SQL_SERVER_DB=$3
 export SQL_SERVER_FQDN=$4
 export PORT=$5
 
-cd
 sudo apt-get update -y --fix-missing
 
 wget https://raw.githubusercontent.com/erjosito/whoami/master/api/sql_api.py
@@ -19,5 +18,4 @@ wget https://raw.githubusercontent.com/erjosito/whoami/master/api/requirements.t
 sudo pip3 install -r requirements.txt
 
 # Run app
-cd
 sudo nohup python3 sql_api.py &
