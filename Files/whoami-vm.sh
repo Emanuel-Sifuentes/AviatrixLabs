@@ -16,8 +16,6 @@ sudo apt-get update -y --fix-missing
 
 wget https://raw.githubusercontent.com/erjosito/whoami/master/api/sql_api.py
 wget https://raw.githubusercontent.com/erjosito/whoami/master/api/requirements.txt
-sudo chmod 777 sql_api.py
-sudo chmod 777 requirements.txt
 sudo pip3 install -r requirements.txt
 
 # Run app
