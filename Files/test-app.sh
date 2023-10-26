@@ -19,3 +19,4 @@ pip3 install -r requirements.txt
 
 # Run app
 nohup python3 sql_api.py &
+
