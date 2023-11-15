@@ -22,6 +22,7 @@ def function_handler(event):
     hostname = event["hostname"]
     aviatrix_api_version = event["aviatrix_api_version"]
     aviatrix_api_route = event["aviatrix_api_route"]
+    old_admin_password = event["old_admin_password"]
     new_admin_password = event["new_admin_password"]
     aviatrix_customer_id = event["aviatrix_customer_id"]
     wait_time = default_wait_time_for_apache_wakeup
@@ -47,7 +48,31 @@ def function_handler(event):
     )
     logging.info("ENDED: Wait until API server of controller is up and running")
 
-    # Step1. Login Aviatrix Controller as admin with new password
+    # Step2. Login Aviatrix Controller as admin with old password
+    logging.info("Start: Login in as admin with old password")
+    response = login(
+        api_endpoint_url=api_endpoint_url,
+        username="admin",
+        password=old_admin_password,
+    )
+
+    CID = response.json()["CID"]
+    logging.info("End: Login as admin with old password")
+
+    # Step3. Set Aviatrix Admin Password
+    logging.info("START: Set Aviatrix Admin New Password by invoking Aviatrix API")
+    response = set_aviatrix_admin_password(
+        api_endpoint_url=api_endpoint_url,
+        CID=CID,
+        old_password=old_admin_password,
+        new_password=new_admin_password
+    )
+    py_dict = response.json()
+    logging.info("Aviatrix API response is : " + str(py_dict))
+    logging.info("END: Set Aviatrix Admin New Password by invoking Aviatrix API")
+    CID = None
+
+    # Step4. Login Aviatrix Controller as admin with new password
     logging.info("Start: Login in as admin with new password")
     response = login(
         api_endpoint_url=api_endpoint_url,
@@ -58,9 +83,9 @@ def function_handler(event):
     CID = response.json()["CID"]
     logging.info("End: Login as admin with new password")
 
-    # Step2. Set Aviatrix Customer ID
+    # Step5. Set Aviatrix Customer ID
     # only BYOL license in Azure
-    logging.info("START: Set Aviatrix Customer ID by invoking aviatrix API")
+    logging.info("START: Set Aviatrix Customer ID by invoking Aviatrix API")
     response = set_aviatrix_customer_id(
         api_endpoint_url=api_endpoint_url,
         CID=CID,
@@ -363,6 +388,29 @@ def set_aviatrix_customer_id(
 
 # End def set_aviatrix_customer_id()
 
+def set_aviatrix_admin_password(
+    api_endpoint_url="https://123.123.123.123/v1/api",
+    CID="ABCD1234",
+    #username="admin",
+    old_password="password12345",
+    new_password="newpassword12345"
+):
+    request_method = "POST"
+    data = {"action": "edit_account_user", "what": "password", "username": "admin", "old_password": old_password, "new_password": new_password, "CID": CID}
+
+    logging.info("API endpoint url: %s", str(api_endpoint_url))
+    logging.info("Request method is: %s", str(request_method))
+    logging.info("Request payload is : %s", str(json.dumps(obj=data, indent=4)))
+
+    response = send_aviatrix_api(
+        api_endpoint_url=api_endpoint_url,
+        request_method=request_method,
+        payload=data,
+    )
+    return response
+
+
+# End def set_aviatrix_admin_password()
 
 if __name__ == "__main__":
     logging.basicConfig(
@@ -370,11 +418,13 @@ if __name__ == "__main__":
     )
 
     hostname = sys.argv[1]
-    new_admin_password = sys.argv[2]
-    aviatrix_customer_id = sys.argv[3]
+    old_admin_password = sys.argv[2]
+    new_admin_password = sys.argv[3]
+    aviatrix_customer_id = sys.argv[4]
 
     event = {
         "hostname": hostname,
+        "old_admin_password": old_admin_password,
         "new_admin_password": new_admin_password,
         "aviatrix_customer_id": aviatrix_customer_id,
         "aviatrix_api_version": "v1",

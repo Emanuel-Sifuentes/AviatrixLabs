@@ -4,15 +4,22 @@ variable "avx_controller_public_ip" {
   default = "controller.contoso.com"
 }
 
-variable "avx_controller_admin_password" {
+variable "avx_controller_old_admin_password" {
   type        = string
   sensitive   = true
   description = "aviatrix controller admin password"
-  default = "superSecretPassword"
+  default = "oldPassword12345!"
+}
+
+variable "avx_controller_new_admin_password" {
+  type        = string
+  sensitive   = true
+  description = "aviatrix controller admin password"
+  default = "newPassword12345!"
 }
 
 variable "aviatrix_customer_id" {
   type        = string
   description = "aviatrix customer license id"
-  default = "contoso.com-abu-xxxxxxxxx-1234567890.12"
+  default = "aviatrix.com-abu-xxxxxxxx-xxxxxxxx.xxxx"
 }
