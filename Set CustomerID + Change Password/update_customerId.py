@@ -6,9 +6,13 @@ import traceback
 
 import requests
 
+proxies = {
+    "http": "",
+    "https": "",
+}
+
 # The wait time from experience is between 60 to 600 seconds
 default_wait_time_for_apache_wakeup = 15
-
 
 class AviatrixException(Exception):
     def __init__(self, message="Aviatrix Error Message: ..."):
@@ -130,7 +134,7 @@ def wait_until_controller_api_server_is_ready(
             is_api_service_ready = False
 
             # invoke a dummy REST API to Aviatrix controller
-            response = requests.post(url=api_endpoint_url, data=payload, verify=False)
+            response = requests.post(url=api_endpoint_url, data=payload, verify=False, proxies=proxies)
 
             # check response
             # if the server is ready, the response code should be 200.
@@ -272,12 +276,12 @@ def send_aviatrix_api(
         try:
             if request_type == "GET":
                 response = requests.get(
-                    url=api_endpoint_url, params=payload, verify=False
+                    url=api_endpoint_url, params=payload, verify=False, proxies=proxies
                 )
                 response_status_code = response.status_code
             elif request_type == "POST":
                 response = requests.post(
-                    url=api_endpoint_url, data=payload, verify=False, timeout=timeout
+                    url=api_endpoint_url, data=payload, verify=False, proxies=proxies, timeout=timeout
                 )
                 response_status_code = response.status_code
             else:
